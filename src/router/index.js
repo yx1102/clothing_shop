@@ -24,6 +24,10 @@ Vue.use(VueRouter)
     path: '/shopcart',
     component: ShopCart
   },
+  {
+    path: '/',
+    redirect: '/home'
+  },
 ]
 
 const router = new VueRouter({

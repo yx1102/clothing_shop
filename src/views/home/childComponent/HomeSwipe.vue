@@ -15,7 +15,9 @@ export default {
     props:{
         banner:{
             type: Array,
-            default: []
+             default(){
+                return []
+            }
         }
     },
     components:{

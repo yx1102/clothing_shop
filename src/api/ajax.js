@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // 默认请求的基础地质
-axios.defaults.baseURL = 'http://123.207.32.32:8000';
+axios.defaults.baseURL = 'http://152.136.185.210:8000/api/h8';
 axios.defaults.timeout = 5000;
 
 
