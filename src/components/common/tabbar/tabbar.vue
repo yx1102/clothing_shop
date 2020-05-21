@@ -3,7 +3,11 @@
       <slot></slot>
     </div>
 </template>
-
+<script>
+export default {
+  name: "tabbar"
+}
+</script>
 <style lang="less">
   .tabbar{
     display: flex;

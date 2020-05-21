@@ -15,17 +15,9 @@ export default {
             }
         }
     },
-    methods:{
-        getGood(){
-            console.log(this.goods);
-        }
-    },
     components:{
         GoodsListItem
     },
-    created(){
-        this.getGood()
-    }
 }
 </script>
 
