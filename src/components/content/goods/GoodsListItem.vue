@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <img :src="goodItem.show.img" alt="" v-if="goodItem.show.img" @load="imageLoad"/>
+  <!-- <div @click="$router.push('/detail/' + goodItem.iid)"> -->
+  <router-link :to="/detail/ + goodItem.iid">
+    <img :src="showImg" alt="" v-if="showImg" @load="imageLoad"/>
     <div class="desc">
       <p>{{ goodItem.title }}</p>
       <p>
@@ -8,7 +9,7 @@
         <span>{{ goodItem.cfav }}</span>
       </p>
     </div>
-  </div>
+  </router-link>
 </template>
 <script>
 export default {
@@ -23,7 +24,16 @@ export default {
   },
   methods: {
     imageLoad(){
-      this.$bus.$emit('imageLoad')
+      if(this.$route.path.indexOf('/home') !== -1 ){
+        this.$bus.$emit('homeImageLoad')
+      }else{
+        this.$bus.$emit('detailImageLoad')
+      }
+    }
+  },
+  computed: {
+    showImg(){
+      return this.goodItem.image || this.goodItem.show.img
     }
   },
 };

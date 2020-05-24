@@ -47,23 +47,27 @@
       <!-- 商品列表 -->
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
-    <BackTop @click.native="backClick" v-show="scrollY > 1000"></BackTop>
+    <BackTop @click.native="backTop" v-show="scrollY > 1000"></BackTop>
   </div>
 </template>
 
 <script>
-import HomeSwipe from "views/home/childComponent/HomeSwipe";
-import HomeRecommend from "views/home/childComponent/HomeRommend";
-import GoodsList from "components/content/goods/GoodsList";
+import debounce from 'lodash/debounce'
+import { backTopMixin } from '../../utils/mixin'
 
-import NavBar from "common/navbar/NavBar";
-import TabControl from "components/content/tabcontrol/TabControl";
-import Scroll from "components/content/scroll/Scroll";
-import BackTop from "components/common/backtop/BackTop";
+import HomeSwipe from "views/home/childComponent/HomeSwipe"
+import HomeRecommend from "views/home/childComponent/HomeRommend"
+import GoodsList from "components/content/goods/GoodsList"
 
-import { reqHomeData, reqHomeGoodsList } from "api/home";
+import NavBar from "common/navbar/NavBar"
+import TabControl from "components/content/tabcontrol/TabControl"
+import Scroll from "components/content/scroll/Scroll"
+import BackTop from "components/common/backtop/BackTop"
+
+import { reqHomeData, reqHomeGoodsList } from "api/home"
 export default {
   name: "home",
+  mixins: [backTopMixin],
   components: {
     NavBar,
     HomeSwipe,
@@ -108,10 +112,10 @@ export default {
       this.$refs.tabcontrol1.currentIndex = index
     },
 
-    backClick() {
+    /* backTop() {
       // this.$refs.scroll.scroll.scrollTo(0,0, 500) 第一个scroll是组件，第二个scroll是组件中的data
       this.$refs.scroll.scrollTo(0, 0, 500);
-    },
+    }, */
 
     scrollPosition(position) {
       this.scrollY = Math.abs(position.y);
@@ -121,28 +125,12 @@ export default {
       this.getGoodsList(this.currentType);
     },
 
-    debounce(func, wait) {
-      let timer;
-      return function() {
-        let context = this; // 这边的 this 指向谁?
-        let args = arguments; // arguments中存着e
-
-        if (timer) clearTimeout(timer);
-
-        let callNow = !timer;
-
-        timer = setTimeout(() => {
-          timer = null;
-        }, wait);
-
-        if (callNow) func.apply(context, args);
-      };
-    },
-
-    loadedImg() {
+    loadedImg: debounce(function(){
+      console.log('fjkldsf');
+      
       // 监听tabs的高度
       this.tabHeight = this.$refs.tabcontrol.$el.offsetTop - 44
-    },
+    },500),
 
     /**
      * 接口数据
@@ -178,10 +166,10 @@ export default {
   },
   mounted() {
     // 监听图片是否加载完成
-    this.$bus.$on("imageLoad", () => {
+    this.$bus.$on("homeImageLoad", () => {
       // 前面一个是解决路由切换后不能refresh的bug
       this.$refs.scroll && this.$refs.scroll.refresh();
-    });
+    })
   },
   computed: {
     showGoods() {
@@ -193,14 +181,16 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   activated() {
     // 进入的时候设置会原来的高度
+    // this.$refs.scroll.scrollTo(0, this.scrollY, 0)
+    // this.$refs.scroll.refresh()
   },
   deactivated() {
     // 离开的时候记录当前的高度
-    // this.scrollY = this.$refs.scroll.
+    // this.saveY = this.$refs.scroll && this.scrollY
   },
 };
 </script>

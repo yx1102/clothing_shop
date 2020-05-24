@@ -61,10 +61,10 @@ export default {
 
     loadedImg() {
       // 只需要发送一次事件即可
-      // if (!this.isShowImg) {
+      if (!this.isShowImg) {
         this.$emit("loadedImg");
-       /*  this.isShowImg = true
-      } */
+        this.isShowImg = true
+      }
     }
   },
   computed: {
