@@ -41,7 +41,7 @@ Vue.use(VueRouter)
     path: '/shopcart',
     component: ShopCart,
     meta:{
-      showTabBar: false
+      showTabBar: true
     }
   },
   {

@@ -28,7 +28,7 @@
     </Scroll>
 
     <BackTop @click.native="backTop" v-show="scrollY > 1000"></BackTop>
-    <DetailBottomBar></DetailBottomBar>
+    <DetailBottomBar :goodObj="goodObj"/>
   </div>
 </template>
 
@@ -67,6 +67,7 @@ export default {
       recommentList:[],
       topsHeight: [],
       scrollY: 0,
+      goodObj:{}
     };
   },
   components: {
@@ -145,15 +146,23 @@ export default {
       this.shop = new Shop(result.result.shopInfo);
       // 2.5.获取商品信息
       this.detailInfo = result.result.detailInfo;
-      // 2.6.保存参数信息
+      // 2.6.获取参数信息
       this.paramInfo = new GoodsParam(
         result.result.itemParams.info,
         result.result.itemParams.rule
       )
       
-      // 2.7.保存评论信息
+      // 2.7.获取评论信息
       if (result.result.rate.list) {
         this.commentInfo = result.result.rate.list[0];
+      }
+
+      this.goodObj = {
+        iid : this.goodId,
+        imgURL : this.topImages[0],
+        title : this.DetailBaseInfo.title,
+        desc : this.DetailBaseInfo.desc,
+        newPrice : this.DetailBaseInfo.nowPrice
       }
     },
 
@@ -173,7 +182,7 @@ export default {
       return index
     }
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .detail {
