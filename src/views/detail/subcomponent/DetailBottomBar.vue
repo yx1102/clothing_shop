@@ -27,6 +27,7 @@
     methods: {
       addToCart(){
         this.$store.dispatch('addToCart', this.goodObj)
+        this.$toast.show("已加入购物车");
       }
     },
     props:{

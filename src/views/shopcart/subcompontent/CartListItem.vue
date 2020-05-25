@@ -1,23 +1,36 @@
 <template>
-  <div class="cart_list_item">
-    <!-- <cart-check-button/> -->
-    <input type="checkbox" class="checkedbox">
-    <div class="item_img">
-      <img src="//s11.mogucdn.com/mlcdn/c45406/180808_600abce0g8dc8i4f6ic7k27i7837l_640x960.jpg" alt="" />
-    </div>
-    <div class="item_info">
-      <p class="item_title">"2018秋季新款韩版百搭格子长袖衬衫"</p>
-      <p class="item_desc">"2018秋季新款韩版百搭格子长袖衬衫+前短后长针织气质开衫外套+高腰直筒九分牛仔裤三件套装"</p>
-      <span class="item_price">￥299</span>
-      <span class="item_count">x1</span>
+  <div class="cart_list">
+    <div class="cart_list_item" v-for="(item, index) in cartList" :key="index">
+      <!-- <cart-check-button/> -->
+      <input type="checkbox" class="checkedbox" :checked="item.checked" @click="handelItemChange(item.iid)">
+      <div class="item_img">
+        <img :src="item.imgURL" />
+      </div>
+      <div class="item_info">
+        <p class="item_title">{{item.title}}</p>
+        <p class="item_desc">{{item.desc}}</p>
+        <span class="item_price">￥{{item.nowPrice}}</span>
+        <span class="item_count">x{{item.count}}</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import CartCheckButton from "./CartCheckButton.vue";
+import CartCheckButton from "./CartCheckButton.vue"
+import {mapState} from 'vuex'
 export default {
   name: 'cartListItemPage',
   methods: {
+    handelItemChange(id){
+      const index = this.cartList.findIndex(item => item.iid === id)
+      this.$store.dispatch('handelItemChange', index)
+      // this.cartList[index].checked = !this.cartList[index].checked
+    }
+  },
+  computed: {
+    ...mapState({
+      cartList: state => state.cartList
+    })
   },
   components: {
     CartCheckButton

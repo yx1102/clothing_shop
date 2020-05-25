@@ -126,8 +126,6 @@ export default {
     },
 
     loadedImg: debounce(function(){
-      console.log('fjkldsf');
-      
       // 监听tabs的高度
       this.tabHeight = this.$refs.tabcontrol.$el.offsetTop - 44
     },500),

@@ -162,7 +162,8 @@ export default {
         imgURL : this.topImages[0],
         title : this.DetailBaseInfo.title,
         desc : this.DetailBaseInfo.desc,
-        newPrice : this.DetailBaseInfo.nowPrice
+        nowPrice : this.DetailBaseInfo.nowPrice,
+        checked: true
       }
     },
 
