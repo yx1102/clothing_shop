@@ -36,7 +36,7 @@ export default {
 <style scoped>
 #cart_list {
   font-size: 0.68rem;
-  height: calc(100vh - 1.9rem - 2.09rem - 1.9rem);
+  height: calc(100vh - 93px);
 
   padding-bottom: 42px;
 }

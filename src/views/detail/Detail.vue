@@ -3,7 +3,7 @@
     <nav-bar class="navbar">
       <div
         slot="left"
-        class="iconfont icon-fenxiang"
+        class="iconfont icon-jiantou2"
         @click="$router.back()"
       ></div>
       <div slot="center">

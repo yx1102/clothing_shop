@@ -5,6 +5,7 @@ import Detail from 'views/detail/Detail.vue'
 import Category from 'views/category/Category.vue'
 import Profile from 'views/profile/Profile.vue'
 import ShopCart from 'views/shopcart/ShopCart.vue'
+import Login from 'views/login/Login.vue'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,13 @@ Vue.use(VueRouter)
     component: ShopCart,
     meta:{
       showTabBar: true
+    }
+  },
+  {
+    path: '/login',
+    component: Login,
+    meta:{
+      showTabBar: false
     }
   },
   {
