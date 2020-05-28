@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!-- 导航栏 -->
-    <nav-bar class="navbar1">
+    <nav-bar class="navbar">
       <div slot="center">购物商店</div>
     </nav-bar>
     <!-- 到达指定位置出现的tab栏 -->

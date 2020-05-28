@@ -1,152 +1,184 @@
 <template>
-  <div class="wrapper" ref="wrapper">
-    <div class="content">
-        <ul>
-          <button @click="btnClick">1111</button>
-          <li>1</li>
-          <li>2</li>
-          <li>3</li>
-          <li>4</li>
-          <li>5</li>
-          <li>6</li>
-          <li>7</li>
-          <li>8</li>
-          <li>9</li>
-          <li>10</li>
-          <li>11</li>
-          <li>12</li>
-          <li>13</li>
-          <li>14</li>
-          <li>15</li>
-          <li>16</li>
-          <li>17</li>
-          <li>18</li>
-          <li>19</li>
-          <li>20</li>
-          <li>21</li>
-          <li>22</li>
-          <li>23</li>
-          <li>24</li>
-          <li>25</li>
-          <li>26</li>
-          <li>27</li>
-          <li>28</li>
-          <li>29</li>
-          <li>30</li>
-          <li>31</li>
-          <li>32</li>
-          <li>33</li>
-          <li>34</li>
-          <li>35</li>
-          <li>36</li>
-          <li>37</li>
-          <li>38</li>
-          <li>39</li>
-          <li>40</li>
-          <li>41</li>
-          <li>42</li>
-          <li>43</li>
-          <li>44</li>
-          <li>45</li>
-          <li>46</li>
-          <li>47</li>
-          <li>48</li>
-          <li>49</li>
-          <li>50</li>
-          <li>51</li>
-          <li>52</li>
-          <li>53</li>
-          <li>54</li>
-          <li>55</li>
-          <li>56</li>
-          <li>57</li>
-          <li>58</li>
-          <li>59</li>
-          <li>60</li>
-          <li>61</li>
-          <li>62</li>
-          <li>63</li>
-          <li>64</li>
-          <li>65</li>
-          <li>66</li>
-          <li>67</li>
-          <li>68</li>
-          <li>69</li>
-          <li>70</li>
-          <li>71</li>
-          <li>72</li>
-          <li>73</li>
-          <li>74</li>
-          <li>75</li>
-          <li>76</li>
-          <li>77</li>
-          <li>78</li>
-          <li>79</li>
-          <li>80</li>
-          <li>81</li>
-          <li>82</li>
-          <li>83</li>
-          <li>84</li>
-          <li>85</li>
-          <li>86</li>
-          <li>87</li>
-          <li>88</li>
-          <li>89</li>
-          <li>90</li>
-          <li>91</li>
-          <li>92</li>
-          <li>93</li>
-          <li>94</li>
-          <li>95</li>
-          <li>96</li>
-          <li>97</li>
-          <li>98</li>
-          <li>99</li>
-          <li>100</li>
-        </ul>
+  <div class="category">
+    <!-- 导航栏 -->
+    <nav-bar class="navbar">
+      <div slot="center">购物商店</div>
+    </nav-bar>
+    <div class="good">
+      <left-menu :menu="leftMenuList" @changeTab="changeTab"></left-menu>
+      
+      <scroll ref="rightScroll" class="right_scroll">
+        <!-- 商品列表 -->
+        <ProductList :goods="goods" @loadImg="loadImg"></ProductList>
+      </scroll>
     </div>
   </div>
 </template>
 <script>
-import BScroll from 'better-scroll'
+import NavBar from "common/navbar/NavBar";
+import Scroll from "components/content/scroll/Scroll";
+
+import LeftMenu from './subcomponent/LeftMenu'
+import ProductList from './subcomponent/ProductList'
+
+import { reqCategoryMenu, reqCategoryInfo } from "../../api/category";
 export default {
-  data(){
+  data() {
     return {
-      scroll: null
+      leftMenuList: [],
+      goods:{},
+      changeIndex: 0
     }
   },
-  methods:{
-    btnClick(){
-      console.log('111');
-    },
+  created() {
+    this.getCategoryMenu()
   },
-  mounted(){
-    this.scroll = new BScroll(this.$refs.wrapper, {
-      // ...... 详见配置项
-      probeType: 3,
-      click: true,
-      pullUpLoad: true
-    })
+  mounted() {
+    this.$refs.rightScroll && this.$refs.rightScroll.refresh();
+  },
+  methods: {
+    /**
+     * 方法
+     */
+    changeTab(index){
+      this.changeIndex = index
+      this.getCategoryInfo()
+      this.$refs.rightScroll.scrollTo(0,0,0)
+    },
 
-    this.scroll.on('scroll', (position) => {
-      // console.log(position)
-    })
+    loadImg(){
+      this.$refs.rightScroll && this.$refs.rightScroll.refresh()
+    },
 
-    this.scroll.on('pullingUp', () => {
-      console.log('上拉加载')
+    /**
+     * 请求网络数据
+     */
+    async getCategoryMenu() {
+      const result = await reqCategoryMenu();
+      if (result.returnCode === "SUCCESS") {
+        this.leftMenuList = result.data.category.list;
+      }
 
-      this.scroll.finishPullUp()
-    })
+      this.getCategoryInfo()
+    },
 
+    async getCategoryInfo(){
+      const maitKey = this.leftMenuList[this.changeIndex].maitKey
+      const result = await reqCategoryInfo(maitKey)
+      if (result.returnCode === "SUCCESS") {
+        this.goods = result.data
+      }
+    }
+  },
+  components: {
+    NavBar,
+    LeftMenu,
+    ProductList,
+    Scroll
   }
-}
+};
 </script>
 <style lang="less" scoped>
-.wrapper{
-  height: 150px;
-  background-color: pink;
+.category {
+  height: 100vh;
 
- /*  overflow: hidden;
-  overflow-y: scroll; */
+  .right_scroll{
+    height: calc(100vh - 44px - 49px);
+  }
+
+  .navbar {
+    background-color: var(--color-tint);
+    color: #fff;
+  }
+
+  .good {
+    display: flex;
+    width: 100%;
+    background: #fff;
+    overflow: hidden;
+
+    .foods-wrapper {
+      flex: 1;
+
+      .title {
+        padding-left: 14px;
+        height: 26px;
+        line-height: 26px;
+        border-left: 2px solid #d9dde1;
+        font-size: 12px;
+        color: rgb(147, 153, 159);
+        background: #f3f5f7;
+      }
+
+      .food-item {
+        display: flex;
+        margin: 18px;
+        padding-bottom: 18px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .icon {
+          flex: 0 0 57px;
+          margin-right: 10px;
+        }
+
+        .content {
+          flex: 1;
+          position: relative;
+
+          .name {
+            margin: 2px 0 8px 0;
+            height: 14px;
+            line-height: 14px;
+            font-size: 14px;
+            color: rgb(7, 17, 27);
+          }
+
+          .desc,
+          .extra {
+            line-height: 10px;
+            font-size: 10px;
+            color: rgb(147, 153, 159);
+          }
+
+          .desc {
+            line-height: 12px;
+            margin-bottom: 8px;
+          }
+
+          .extra {
+            .count {
+              margin-right: 12px;
+            }
+          }
+
+          .price {
+            font-weight: 700;
+            line-height: 24px;
+
+            .now {
+              margin-right: 8px;
+              font-size: 14px;
+              color: rgb(240, 20, 20);
+            }
+
+            .old {
+              text-decoration: line-through;
+              font-size: 10px;
+              color: rgb(147, 153, 159);
+            }
+          }
+
+          .cartcontrol-wrapper {
+            position: absolute;
+            right: 0;
+            bottom: -5px;
+          }
+        }
+      }
+    }
+  }
 }
 </style>

@@ -76,7 +76,9 @@ export default {
     }
   },
   mounted() {
-    this._initScroll();
+    this.$nextTick(() => {
+      this._initScroll()
+    })
   }
 };
 </script>
