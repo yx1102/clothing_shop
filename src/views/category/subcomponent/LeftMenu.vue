@@ -47,15 +47,17 @@ export default {
   flex: 0 0 80px;
   width: 100px;
   background: #f3f5f7;
+  overflow: hidden;
 }
 .menu-item {
   display: table;
   height: 54px;
   width: 100%;
-  padding: 0 12px;
+  padding: 0 10px;
   line-height: 14px;
 
   &.current {
+    border-left: 2px solid #02a774;
     position: relative;
     z-index: 10;
     margin-top: -1px;

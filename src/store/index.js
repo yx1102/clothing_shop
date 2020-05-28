@@ -11,13 +11,22 @@ export default new Vuex.Store({
   },
   mutations: {
     // 加入购物车
-    [ADD_CART](state, good){
+    /* [ADD_CART](state, good){
       Vue.set(good, "count", 1)
       state.cartList.push(good)
     },
 
     [ADD_COUNT](state, good){
       good.count ++
+    }, */
+
+    [ADD_CART](state, good){
+      Vue.set(good, "count", 1)
+      state.cartList.push(good)
+    },
+
+    [ADD_COUNT](state, index){
+      state.cartList[index].count ++
     },
 
     // 单个CheckBox
@@ -33,17 +42,25 @@ export default new Vuex.Store({
   },
   actions: {
     // 加入购物车
+  /* addToCart({commit, state}, good){
+    let oldProduct = null
+    state.cartList.some(item => {
+      if(item.iid === good.iid){
+        oldProduct = item
+      }
+    })
+    if(oldProduct){
+      commit(ADD_COUNT, good)
+    }else{
+      commit(ADD_CART, good)
+    } */
     addToCart({commit, state}, good){
-      let oldProduct = null
-      state.cartList.some(item => {
-        if(item.iid === good.iid){
-          oldProduct = item
-        }
-      })
-      if(oldProduct){
-        commit(ADD_COUNT, good)
-      }else{
+      const index = state.cartList.findIndex(item => item.iid === good.iid)
+
+      if(index === -1){
         commit(ADD_CART, good)
+      }else{
+        commit(ADD_COUNT, index)
       }
     },
 
