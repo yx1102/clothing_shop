@@ -6,6 +6,7 @@ import Category from 'views/category/Category.vue'
 import Profile from 'views/profile/Profile.vue'
 import ShopCart from 'views/shopcart/ShopCart.vue'
 import Login from 'views/login/Login.vue'
+import Register from 'views/register/Register.vue'
 
 Vue.use(VueRouter)
 
@@ -54,6 +55,13 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/register',
+    component: Register,
+    meta:{
+      showTabBar: false
+    }
+  },
+  {
     path: '/',
     redirect: '/home',
     meta:{
@@ -73,7 +81,7 @@ router.beforeEach((to, from, next) => {
     next();
   }else if(to.meta.requireAuth){
     // 判断该路由是否需要登录权限
-    if (localStorage.getItem("Authorization")) {  // 获取当前的token是否存在
+    if (localStorage.getItem("token")) {  // 获取当前的token是否存在
       console.log("token存在");
       next();
     } else {

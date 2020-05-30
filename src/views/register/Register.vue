@@ -1,51 +1,34 @@
 <template>
-  <section class="loginContainer">
-    <div class="loginInner">
-      <div class="login_header">
-        <h2 class="login_logo">会员登录</h2>
+  <section class="registerContainer">
+    <div class="registerInner">
+      <div class="register_header">
+        <h2 class="register_logo">会员注册</h2>
       </div>
-      <div class="login_content">
+      <div class="register_content">
         <form>
           <div>
             <section>
-              <section class="login_message">
-                <input
-                  type="text"
-                  maxlength="11"
-                  placeholder="用户名"
-                  v-model.trim="username"
-                />
+              <section class="register_message">
+                <input type="text" maxlength="11" placeholder="账号" v-model.trim="name"/>
               </section>
-              <section class="login_verification">
-                <input
-                  type="password"
-                  placeholder="密码"
-                  v-model.trim="password"
-                  min="6"
-                  max="18"
-                />
+              <section class="register_message">
+                <input type="text" maxlength="11" placeholder="用户名" v-model.trim="username"/>
+              </section>
+              <section class="register_verification">
+                <input type="password" placeholder="密码" v-model.trim="password" min="6" max="18"/>
+              </section>
+              <section class="register_verification">
+                <input type="password" placeholder="确认密码" v-model.trim="confirmPwd" @blur="checkedPwd"/>
+                <div class="switch_button off">
+                  <div class="switch_circle"></div>
+                  <span class="switch_text">...</span>
+                </div>
               </section>
             </section>
           </div>
-          <div class="login_remember">
-            <div class="remember_left">
-              <label><input type="checkbox" /><span>记住密码</span></label>
-            </div>
-            <div class="remember_right">
-              忘记密码?
-            </div>
-          </div>
-          <button class="login_submit" @click.prevent="handelLogin">
-            登录
-          </button>
+          <button class="register_submit" @click.prevent="handelRegister">注册</button>
         </form>
-        <p class="go_regester">
-          您现在还不是会员?<span
-            class="regester_now"
-            @click="$router.push('/register')"
-            >立即注册</span
-          >
-        </p>
+        <a class="register_now" @click="$router.push('/login')">拥有账号直接登录</a>
       </div>
       <a href="javascript:" class="go_back">
         <i class="iconfont icon-jiantou2"></i>
@@ -55,51 +38,64 @@
 </template>
 
 <script>
-import { reqLogin } from "../../api/login";
+import {reqRegister} from '../../api/login'
 export default {
   data() {
     return {
-      username: "admin12",
-      password: "admin"
+      name: 'kkkkk',
+      username: 'kkkkk',
+      password:'123456',
+      confirmPwd:'123456',
     };
   },
   methods: {
-    async handelLogin() {
-      if (!this.username || !this.password) {
-        return this.$toast.show("请输入相关信息");
+    // 校验密码是否一致
+    checkedPwd(){
+      if(!this.confirmPwd){
+        this.$toast.show('请输入确认密码')
+      }else if(this.confirmPwd !== this.password){
+        this.$toast.show('密码不一致')
       }
-      const result = await reqLogin(this.username, this.password);
-      if (result.code === 200) {
-        const obj = result;
-        this.$store.dispatch("saveToken", obj);
-        this.$toast.show(result.msg);
-        if (this.$route.query.redirect) {
-          //如果存在参数
-          let redirect = this.$route.query.redirect;
-          this.$router.replace(redirect); //则跳转至进入登录页前的路由
-        } else {
-          this.$router.replace("/"); //否则跳转至首页
-        }
-      } else {
-        this.$toast.show(result.msg);
+    },
+    // 注册请求
+    async handelRegister(){
+      if(!this.name || !this.username){
+        return this.$toast.show('用户名不能为空')
+      }
+      // 密码的正则
+      const regex = new RegExp('^[0-9A-Za-z]{6,18}$')
+      if(!regex.test(this.password)){
+        return this.$toast.show('密码不符合规范')
+      }
+
+      if(this.confirmPwd !== this.password){
+        return this.$toast.show('密码不一致')
+      }
+      const result = await reqRegister(this.name, this.username, this.password)
+        console.log(result);
+      if(result.code === 200){
+        this.$toast.show(result.msg)
+        this.$router.push('/login')
+      }else{
+        this.$toast.show(result.msg)
       }
     }
   }
 };
 </script>
-<style lang="less" scoped>
-.loginContainer {
+<style lang='less' scoped>
+.registerContainer {
   width: 100%;
   height: 100%;
   background: #fff;
 
-  .loginInner {
+  .registerInner {
     padding-top: 60px;
     width: 80%;
     margin: 0 auto;
 
-    .login_header {
-      .login_logo {
+    .register_header {
+      .register_logo {
         font-size: 40px;
         font-weight: bold;
         color: #02a774;
@@ -107,7 +103,7 @@ export default {
       }
     }
 
-    .login_content {
+    .register_content {
       > form {
         margin-top: 60px;
         > div {
@@ -126,7 +122,7 @@ export default {
             }
           }
 
-          .login_message {
+          .register_message {
             position: relative;
             margin-top: 16px;
             height: 48px;
@@ -145,7 +141,7 @@ export default {
             }
           }
 
-          .login_verification {
+          .register_verification {
             position: relative;
             margin-top: 16px;
             height: 48px;
@@ -195,7 +191,7 @@ export default {
             }
           }
 
-          .login_hint {
+          .register_hint {
             margin-top: 12px;
             color: #999;
             font-size: 14px;
@@ -207,28 +203,7 @@ export default {
           }
         }
 
-        .login_remember {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 15px;
-          height: 30px;
-          line-height: 30px;
-          font-weight: bolder;
-
-          .remember_left {
-            input {
-              width: 15px;
-              height: 100%;
-              float: left;
-              margin-right: 10px;
-            }
-            span {
-              float: left;
-            }
-          }
-        }
-
-        .login_submit {
+        .register_submit {
           display: block;
           width: 100%;
           height: 42px;
@@ -252,15 +227,13 @@ export default {
       }
     }
 
-    .go_regester {
+    .register_now{
+      display: block;
       margin-top: 40px;
       text-align: center;
       font-size: 13px;
-      .regester_now {
-        color: red;
-        font-weight: bolder;
-        margin-left: 15px;
-      }
+      color: red;
+      font-weight: bolder;
     }
 
     .go_back {

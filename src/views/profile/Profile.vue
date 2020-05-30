@@ -10,7 +10,7 @@
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
+          <p class="user-info-top">{{user.username}}</p>
           <p>
             <span class="user-icon">
               <i class="iconfont icon-shouji icon-mobile"></i>
@@ -97,18 +97,41 @@
         </div>
       </a>
     </section>
+    <button class="logout" @click.prevent="resetUser">退出</button>
   </div>
 </template>
 <script>
 import NavBar from "common/navbar/NavBar"
+import {reqUserInfo} from '../../api/profile'
 export default {
+  data() {
+    return {
+      user:{}
+    }
+  },
+  created() {
+    this.getUserInfo()
+  },
   components: {
     NavBar
   },
   mounted() {
-    console.log(this.$router);
-    console.log(this.$route);
-  }
+  },
+  computed:{
+    
+  },
+  methods: {
+    async getUserInfo(){
+      const result = await reqUserInfo(JSON.parse(localStorage.getItem('id')))
+      this.user = result[0]
+    },
+    resetUser(){
+      if(window.confirm('您确定要退出吗?')){
+          this.$store.dispatch('resetUser')
+          this.$router.replace('/')
+        }
+    }
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -116,7 +139,6 @@ export default {
   .navbar {
     background-color: #00a5f9;
     color: #fff;
-    font-size: 20px;
   }
 
   .profile-number {
@@ -343,6 +365,18 @@ export default {
         }
       }
     }
+  }
+
+  .logout{
+    width: 100%;
+    height: 40px;
+    border: none;
+    outline: none;
+    background: red;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    margin-top: 20px
   }
 }
 </style>

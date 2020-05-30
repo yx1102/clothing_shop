@@ -1,13 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {ADD_CART,ADD_COUNT, HANDEL_ITEM_CHANGE, HANDEL_ALLCHECKED} from './mutations-types'
+import {ADD_CART,ADD_COUNT, HANDEL_ITEM_CHANGE, HANDEL_ALLCHECKED, SAVE_USER,SAVE_TOKEN, RESET_USER,RESET_TOKEN} from './mutations-types'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     // 购物车数组
-    cartList:[]
+    cartList:[],
+    token:'',
+    id: '',
+    user:{}
   },
   mutations: {
     // 加入购物车
@@ -38,6 +41,17 @@ export default new Vuex.Store({
     [HANDEL_ALLCHECKED](state, checked){
       checked = !checked
       state.cartList.forEach(item => item.checked = checked)
+    },
+
+    [SAVE_TOKEN](state, obj){
+      state.token = obj.token
+      state.id = obj.id
+    },
+
+    [RESET_USER](state){
+      state.token = ''
+      localStorage.removeItem("token")
+      localStorage.removeItem("id")
     }
   },
   actions: {
@@ -71,6 +85,19 @@ export default new Vuex.Store({
 
     allChecked({commit},checked){
       commit(HANDEL_ALLCHECKED, checked)
+    },
+
+    // 用户信息
+    saveToken({commit}, obj){
+      const token = 'Bearer ' + obj.token
+      obj.token = token
+      localStorage.setItem('token', JSON.stringify(token))
+      localStorage.setItem('id', JSON.stringify(obj.id))
+      commit(SAVE_TOKEN, obj)
+    },
+
+    resetUser({commit}){
+      commit(RESET_USER)
     }
   },
   getters:{

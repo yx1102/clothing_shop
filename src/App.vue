@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <keep-alive exclude="detail">
+    <keep-alive exclude="detail,cartPage">
       <router-view></router-view>
     </keep-alive>
     <main-tab-bar v-if="$route.meta.showTabBar"></main-tab-bar>
